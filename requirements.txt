@@ -1,0 +1,4 @@
+Flask
+pigpio
+picamera
+opencv-python
