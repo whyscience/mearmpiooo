@@ -15,23 +15,21 @@ You can do followings:
 ## Reference
 
 
-This document is very helpful.
-I recommend to read this first and test demo code with your MeArmPi.
+MeaArmPi TechnicalOverview
+
+This document is very helpful. Plese read this first and test demo code with your MeArmPi.
 https://groups.google.com/group/mearm/attach/18a4eb363ddaa/MeArmPiTechnicalOverviewV0-2DRAFT.pdf?part=0.1
 
 
-MeArm Pi
+Mearm(Python library)
 
-https://mime.co.uk/products/mearm-pi/
+https://gist.github.com/bjpirt/9666d8c623cb98e755c92f1fbeeb6118
+
 
 Flask Video streaming
 
 http://blog.miguelgrinberg.com/post/video-streaming-with-flask
 https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
-
-Mearm(Python library)
-
-https://gist.github.com/bjpirt/9666d8c623cb98e755c92f1fbeeb6118
 
 
 
@@ -150,7 +148,7 @@ python3 app.py --test -c yellow
 
 ### Test with only servos
 
-I strongly recommend to confirm if servo settings are correct with your MeArm Pi.
+I strongly recommend you to confirm if servo settings are correct with your MeArm Pi.
 
 Run app.py with the arms of MeArmPi removed from servos.
 You can see that servos move to the right direction.
