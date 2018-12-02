@@ -31,6 +31,10 @@ Flask Video streaming
 http://blog.miguelgrinberg.com/post/video-streaming-with-flask
 https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
 
+OpenCV (camshift sample code)
+
+https://github.com/opencv/opencv/tree/master/samples/python
+
 
 
 ## Prerequisites
@@ -64,7 +68,6 @@ pip3 install picamera
 ## How to use
 
 Make sure to be enable picamera(rasp-config) and modprobe bcm2835-v412.
-You also must start pigpiod daemon.
 
 ```sh
 sudo modprobe bcm2835-v4l2
@@ -100,7 +103,7 @@ Define parameters in config.ini.
 you might need to adjust some parameters in your environment.
 
 ```sh
-[default]
+[camera]
 # deifne frame resolution and frame rate.
 # (320 * 240  16fps : recommend setting)
 frame_prop = (320, 240, 16)

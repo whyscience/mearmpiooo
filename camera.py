@@ -1,5 +1,4 @@
-"""ref:
-https://blog.miguelgrinberg.com/post/video-streaming-with-flask
+""" ref:
 https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
 """
 
@@ -8,15 +7,10 @@ import meanshift
 import camshift
 import mearmlib
 from time import sleep
-from logging import getLogger, basicConfig, DEBUG, INFO
 import configparser
 import math
-
-logger = getLogger(__name__)
-basicConfig(
-    level=INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(funcName)s(): %(message)s")
-"""load config"""
+"""load configuration
+"""
 config = configparser.ConfigParser()
 config.read('config.ini')
 frame_prop = eval(config.get('camera', 'frame_prop'))
@@ -31,7 +25,7 @@ class VideoCamera(object):
         self.video.set(cv2.CAP_PROP_FRAME_WIDTH, frame_prop[0])
         self.video.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_prop[1])
         self.video.set(cv2.CAP_PROP_FPS, frame_prop[2])
-        """get video prop again
+        """ Get video prop again
           because "The returned value might be different from what really used by the device
           effective behaviour depends from device driver and API Backend"
           https://docs.opencv.org/3.4.0/d8/dfe/classcv_1_1VideoCapture.html#aa6480e6972ef4c00d74814ec841a2939
@@ -40,6 +34,8 @@ class VideoCamera(object):
         self.stream_only = stream_only
         self.margin_window = self._set_margin_window()
         self.track_window = self._set_track_window()
+        """ Create opencv tracking instnace
+        """
         if not self.stream_only:
             self.myMeArmMove = mearmlib.MearmMove(is_test)
         if algorithm == "meanshift":
@@ -50,6 +46,8 @@ class VideoCamera(object):
             self.tracking = camshift.CamShift(self.video_prop,
                                               self.margin_window,
                                               self.track_window, target_color)
+        """ Set text put on frames
+        """
         self.params = "{} * {} ({}) {} {} {} is_test:{}".format(
             self.video_prop[0], self.video_prop[1], self.video_prop[2],
             frame_margin, algorithm, target_color, is_test)

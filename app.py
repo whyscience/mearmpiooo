@@ -1,6 +1,13 @@
-"""ref:
-https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
-"""
+###############################################################################
+# 
+# The MIT License (MIT)
+# 
+# Copyright (c) 2014 Miguel Grinberg
+# 
+# Released under the MIT license
+# https://github.com/miguelgrinberg/flask-video-streaming/blob/master/LICENSE
+#
+###############################################################################
 
 from flask import Flask, Response
 from camera import VideoCamera
