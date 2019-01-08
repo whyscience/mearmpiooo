@@ -27,8 +27,7 @@ class MeanShift(object):
         self.init_track_window = track_window
         self.track_window = self.init_track_window
         self.margin_window = margin_window
-        self.term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10,
-                          1)
+        self.term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
         self.target_color = target_color
         if self.target_color:
             config = configparser.ConfigParser()
@@ -75,21 +74,12 @@ class MeanShift(object):
             # Draw it on image
             frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0),
                                   2)
-            """Draw frame margin on image"""
+            """ Draw frame margin on image """
             xmin, ymin, xmax, ymax = self.margin_window
             frame = cv2.rectangle(frame, (round(xmin), round(ymin)),
                                   (round(xmax), round(ymax)), (0, 0, 255), 1)
-            """Draw track init_track_window on image"""
-            xtrack_min = self.init_track_window[0]
-            ytrack_min = self.init_track_window[1]
-            xtrack_max = self.init_track_window[0] + self.init_track_window[2]
-            ytrack_max = self.init_track_window[1] + self.init_track_window[3]
-            frame = cv2.rectangle(
-                frame, (round(xtrack_min), round(ytrack_min)),
-                (round(xtrack_max), round(ytrack_max)), (128, 255, 255), 1)
-            """convert prob image glay to bgr"""
+
+            """ convert prob image glay to bgr """
             prob = cv2.cvtColor(prob, cv2.COLOR_GRAY2BGR)
-            """concatenate fame and prob to display them on the same window
-               if you dont need this, just comment out under two lines"""
-            frame = cv2.vconcat([frame, prob])
-            return frame, self.track_window, track_window0
+
+            return prob, frame, self.track_window, track_window0

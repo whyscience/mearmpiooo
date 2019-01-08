@@ -9,7 +9,7 @@ basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(funcName)s(): %(message)s")
 
 import mearm
-"""load config"""
+""" load config """
 config = configparser.ConfigParser()
 config.read('config.ini')
 base_by = eval(config.get('mearm', 'base_by'))
@@ -27,7 +27,8 @@ class MearmMove(object):
         self.time_old = time()
         self.time_delta = 0
         self.myMeArm = mearm.MeArm()
-        """update current angles at the first time"""
+
+        """ update current angles at the first time """
         if not self.is_test:
             self.myMeArm.moveToCentres()
         self.grip_t = threading.Thread(target=self._grip_mearm)
@@ -64,8 +65,8 @@ class MearmMove(object):
 
     def _grip_mearm(self):
         self.time_now = time()
-        """update time_delta
-           mearm grip stars wheh time_delta exceed 2(sec)
+        """ update time_delta
+            mearm grip starts wheh time_delta exceed 2(sec)
         """
         self.time_delta = self.time_delta + (self.time_now - self.time_old)
         if self.time_delta > 2:
@@ -88,8 +89,7 @@ class MearmMove(object):
         if not self.is_test:
             self.myMeArm.moveByPosition(args[0], args[1], args[2])
 
-    def motion(self, track_window, track_area_ratio, move_ratio, video_prop,
-               margin_window):
+    def motion(self, track_window, track_area_ratio, move_ratio, margin_window):
         """ get window position
             x, y, w, h :
               current positon of track window.
@@ -102,7 +102,8 @@ class MearmMove(object):
         logger.debug(
             "track_window x, y, w, h:{}, margin_window m_x, m_y, m_w, m_h:{}".
             format(track_window, margin_window))
-        """Nothing to be done when tracking object might be failed"""
+
+        """ Nothing to be done when tracking object might be failed """
         if x < xmin and x + w > xmax or y < ymin and y + h > ymax:
             logger.debug(
                 "tracking might be failed: track_window area is larger than margin_window area: track_window:{}, margin_window:{}".
@@ -113,38 +114,37 @@ class MearmMove(object):
                 "tacking might be failed: track_window area is smaller than {} w:{}, h:{}".
                 format(min_area, w, h))
             return
-        """mearm "grip"s object locked on"""
+
+        """ MeArmPi grips the object locked on """
         if move_ratio == (0, 0):
             if not self.grip_t.is_alive():
                 self.grip_t = threading.Thread(target=self._grip_mearm)
                 self.grip_t.start()
             return
-        """initialize angle"""
+
+        """ initialize angle """
         base_angle = 0
         upper_angle = 0
         lower_angle = 0
-        """move base"""
+
+        """ move base """
         if x < xmin:
-            base_angle = self._calc_angle("base", move_ratio,
-                                          track_area_ratio) * -1
+            base_angle = self._calc_angle("base", move_ratio, track_area_ratio) * -1
         if x > xmax - w:
             base_angle = self._calc_angle("base", move_ratio, track_area_ratio)
-        """move upper and lower arm"""
+
+        """ move upper and lower arm """
         if y < ymin:
-            upper_angle = self._calc_angle("upper", move_ratio,
-                                           track_area_ratio)
-            lower_angle = self._calc_angle("upper", move_ratio,
-                                           track_area_ratio) * -1
+            upper_angle = self._calc_angle("upper", move_ratio, track_area_ratio)
+            lower_angle = self._calc_angle("upper", move_ratio, track_area_ratio) * -1
         if y > ymax - h:
-            upper_angle = self._calc_angle("upper", move_ratio,
-                                           track_area_ratio) * -1
-            lower_angle = self._calc_angle("upper", move_ratio,
-                                           track_area_ratio)
+            upper_angle = self._calc_angle("upper", move_ratio, track_area_ratio) * -1
+            lower_angle = self._calc_angle("upper", move_ratio, track_area_ratio)
         if base_angle or upper_angle or lower_angle != 0:
+            logger.debug("lower_angle, upper_angle, base_angle:{} {} {}".format(lower_angle, upper_angle, base_angle))
             self._move_angles(lower_angle, upper_angle, base_angle)
         if x > xmin and x < xmax - w and y > ymin and y < ymax - h:
             lower_angle = self._forward_back_mearm(track_area_ratio)
             if lower_angle:
-                logger.debug("inside margin window track_area_ratio:{}".format(
-                    track_area_ratio))
+                logger.debug("inside margin window track_area_ratio:{}".format( track_area_ratio))
                 self._move_angles(lower_angle, upper_angle, base_angle)

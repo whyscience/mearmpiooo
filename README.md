@@ -51,7 +51,7 @@ You need to install packages on Raspberry Pi
 
 ```sh
 sudo apt update
-sudo apt install pip3-python -y
+sudo apt install python3-pip -y
 sudo apt install libatlas3-base libwebp6 libtiff5 libjasper1 libilmbase12 libopenexr22 -y
 sudo apt install libgstreamer1.0-0 libavcodec57 libavformat57 libswscale4 libqtgui4 libqt4-test -y
 ```
@@ -62,12 +62,11 @@ sudo apt install libgstreamer1.0-0 libavcodec57 libavformat57 libswscale4 libqtg
 pip3 install opencv-python
 pip3 install flask
 pip3 install pigpio
-pip3 install picamera
 ```
 
 ## How to use
 
-Make sure to be enable picamera(rasp-config) and modprobe bcm2835-v412.
+Make sure that picamera is enabled picamera(rasp-config) and modprobe bcm2835-v412.
 
 ```sh
 sudo modprobe bcm2835-v4l2

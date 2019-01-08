@@ -36,7 +36,7 @@ class Servo:
         self.moveToAngle(centre)
 
     def moveToAngle(self, angle):
-        """prevent mearmpi from moving so far (angle: +- safe_angle)"""
+        """ prevent MeArmPi from moving so far (angle: +- safe_angle) """
         if angle > self.maxAngle - safe_angle:
             angle = self.maxAngle - safe_angle
         if angle < self.minAngle + safe_angle:
