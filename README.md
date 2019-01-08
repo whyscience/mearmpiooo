@@ -5,11 +5,16 @@
 This is test code of object tracking with Mearm Pi.
 
 You can do followings:
-* View opencv video capture streaming via browser.
-* Chose Object tracking algorithm (meanshift or camshift)
-* Color Tracking configuration
+* Video streaming from Tello on your browser.
+* Object / Color Tracking.
+* Change tracking mode (streamonly, test, tracking).
 
 [![](https://img.youtube.com/vi/vpYcX1vJjsI/0.jpg)](https://www.youtube.com/watch?v=vpYcX1vJjsI)
+
+browser image
+
+<a href="https://raw.githubusercontent.com/wiki/kodamap/mearmpiooo/images/mearmpi_ui.jpg">
+<img src="https://raw.githubusercontent.com/wiki/kodamap/mearmpiooo/images/mearmpi_ui.jpg" alt="mearmpi_ui" style="width:75%;height:auto;" ></a>
 
 
 ## Reference
@@ -61,7 +66,6 @@ sudo apt install libgstreamer1.0-0 libavcodec57 libavformat57 libswscale4 libqtg
 ```sh
 pip3 install opencv-python
 pip3 install flask
-pip3 install pigpio
 ```
 
 ## How to use
@@ -115,16 +119,18 @@ track_area = (80, 80)
 
 ### Run app (example)
 
-Color tracking
+At first, your can run app.py with test option to confirm if settings are fine.
+
+This example is Color(yellow) tracking.
 
 ```sh
-$ python3 app.py -c yellow
+$ python3 app.py -c yellow --test
 ```
 
 access to the streaming url with your browser
 
 ```txt
-http://<your mearm ip addr>:5000/video_feed
+http://<your mearm ip addr>:5000/
 ```
 
 colors are defined  in color.ini
@@ -139,14 +145,6 @@ upper = 40, 255, 255
 ```
 
 ## Misc
-
-### Test Object traking with MeArm Pi in test mode.
-
-At first, Run app.py with --test option to confirm if settings are fine.
-
-```sh
-python3 app.py --test -c yellow
-```
 
 ### Test with only servos
 

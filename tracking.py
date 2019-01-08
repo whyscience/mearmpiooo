@@ -38,7 +38,7 @@ class Tracking(object):
                 frame_prop, self.margin_window, self.track_window, target_color)
 
         """ Set text put on frames """
-        self.params = "{} * {} ({}) margin:{} {} {} is_test:{}".format(
+        self.params = "{} * {} ({}) resize:{} {} {} {}".format(
             round(video_prop[0]), round(video_prop[1]), round(video_prop[2]), frame_prop, frame_margin, algorithm, target_color)
         self.track_data = "track window:{}({}) {}".format(0, 0, 0)
 
