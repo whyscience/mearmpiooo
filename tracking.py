@@ -21,15 +21,13 @@ track_area = eval(config.get('tracking', 'track_area'))
 
 class Tracking(object):
     def __init__(self, ret, frame, video_prop, algorithm, target_color, stream_only, is_test):
-        self.frame = frame
         self.init_track_window = self._set_track_window()
         self.track_window = self.init_track_window
         self.track_window0 = self.track_window
         self.margin_window = self._set_margin_window()
 
         """ Create MeArmMove instnace """
-        if not stream_only:
-            self.myMeArmMove = mearmlib.MearmMove(is_test)
+        self.myMeArmMove = mearmlib.MearmMove(is_test)
 
         """ Create opencv tracking instnace """
         if algorithm == "meanshift":
@@ -94,24 +92,23 @@ class Tracking(object):
             prob, frame, track_window, track_window0 = self.tracking.object_tracking(ret, frame)
             track_area_ratio = self._calc_track_area_ratio(track_window, track_area)
             move_ratio = self._calc_move_ratio(track_window, track_window0)
-            self.myMeArmMove.motion(track_window, track_area_ratio, move_ratio, self.margin_window)
+            self.myMeArmMove.motion(track_window, track_area_ratio, move_ratio, self.margin_window, is_test)
 
             """ draw margin window on the frame"""
             xmin, ymin, xmax, ymax = self.margin_window
-            self.frame = cv2.rectangle(self.frame, (
-                round(xmin), round(ymin)), (round(xmax), round(ymax)), mode[1], 1)
+            frame = cv2.rectangle(frame, (round(xmin), round(ymin)), (round(xmax), round(ymax)), mode[1], 1)
 
             """ draw init window on the frame """
             init_xmin = self.init_track_window[0]
             init_ymin = self.init_track_window[1]
             init_xmax = self.init_track_window[0] + self.init_track_window[2]
             init_ymax = self.init_track_window[1] + self.init_track_window[3]
-            self.frame = cv2.rectangle(self.frame, (
-                round(init_xmin), round(init_ymin)), (round(init_xmax), round(init_ymax)), (128, 255, 255), 1)
+            frame = cv2.rectangle(frame, (round(init_xmin), round(init_ymin)), (round(init_xmax), round(init_ymax)), (128, 255, 255), 1)
             self.track_data = "track win:{} area:({}/{} {})".format(
                 track_window, track_area[0] * track_area[1], track_window[2] * track_window[3], track_area_ratio)
             frame = cv2.putText(frame, self.params, (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.25, (255, 255, 255), thickness=1)
             frame = cv2.putText(frame, self.track_data, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), thickness=1)
+            frame = cv2.putText(frame, "mode:" + mode[0], (10, frame_prop[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, mode[1], thickness=1)
 
         # Calculate FPS
         curr_time = timer()
@@ -132,3 +129,4 @@ class Tracking(object):
             frame = cv2.vconcat([frame, prob])
 
         return frame
+

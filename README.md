@@ -66,7 +66,7 @@ pip3 install pigpio
 
 ## How to use
 
-Make sure that picamera is enabled picamera(rasp-config) and modprobe bcm2835-v412.
+Make sure that picamera is enabled (rasp-config) and modprobe bcm2835-v412.
 
 ```sh
 sudo modprobe bcm2835-v4l2

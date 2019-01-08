@@ -9,18 +9,19 @@
 #
 ###############################################################################
 
-from flask import Flask, Response
+from flask import Flask, Response, render_template, request, jsonify
 from camera import VideoCamera
 from logging import getLogger, basicConfig, DEBUG, INFO
 import argparse
 import configparser
+import json
+
+app = Flask(__name__)
 
 logger = getLogger(__name__)
 basicConfig(
     level=INFO,
     format="%(asctime)s %(levelname)s %(name)s %(funcName)s(): %(message)s")
-app = Flask(__name__, static_url_path='')
-
 
 def gen(camera):
     while True:
@@ -29,6 +30,10 @@ def gen(camera):
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/video_feed')
 def video_feed():
     video_camera = VideoCamera(algorithm, target_color, stream_only, is_test)
@@ -36,6 +41,29 @@ def video_feed():
         gen(video_camera),
         mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/tracking', methods=['POST'])
+def tracking():
+    global stream_only
+    global is_test
+    command = request.json['command']
+    if command == "streamonly":
+        stream_only = True
+        is_test = False
+        mearmpi_response = "True"
+    elif command == "tracking":
+        stream_only = False
+        is_test = False
+        mearmpi_response = "True"
+    elif command == "test":
+        stream_only = False
+        is_test = True
+        mearmpi_response = "True"
+    result = {
+        "command": command,
+        "result": mearmpi_response,
+    }
+    logger.info("sent:{} res:{}".format(command, mearmpi_response))
+    return jsonify(ResultSet=json.dumps(result))
 
 if __name__ == '__main__':
 

@@ -29,8 +29,7 @@ class MearmMove(object):
         self.myMeArm = mearm.MeArm()
 
         """ update current angles at the first time """
-        if not self.is_test:
-            self.myMeArm.moveToCentres()
+        self.myMeArm.moveToCentres()
         self.grip_t = threading.Thread(target=self._grip_mearm)
         self.grip_t.start()
 
@@ -89,7 +88,9 @@ class MearmMove(object):
         if not self.is_test:
             self.myMeArm.moveByPosition(args[0], args[1], args[2])
 
-    def motion(self, track_window, track_area_ratio, move_ratio, margin_window):
+    def motion(self, track_window, track_area_ratio, move_ratio, margin_window, is_test):
+        self.is_test = is_test
+        
         """ get window position
             x, y, w, h :
               current positon of track window.
@@ -148,3 +149,4 @@ class MearmMove(object):
             if lower_angle:
                 logger.debug("inside margin window track_area_ratio:{}".format( track_area_ratio))
                 self._move_angles(lower_angle, upper_angle, base_angle)
+
