@@ -15,6 +15,10 @@ from logging import getLogger, basicConfig, DEBUG, INFO
 import argparse
 import configparser
 import json
+""" load configuration """
+config = configparser.ConfigParser()
+config.read('config.ini')
+flip_code = eval(config.get('camera', 'flipcode'))
 
 app = Flask(__name__)
 
@@ -23,16 +27,18 @@ basicConfig(
     level=INFO,
     format="%(asctime)s %(levelname)s %(name)s %(funcName)s(): %(message)s")
 
+
 def gen(camera):
     while True:
-        frame = camera.get_frame(stream_only, is_test)
+        frame = camera.get_frame(stream_only, is_test, flip_code)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', flip_code=flip_code)
+
 
 @app.route('/video_feed')
 def video_feed():
@@ -41,29 +47,47 @@ def video_feed():
         gen(video_camera),
         mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
 @app.route('/tracking', methods=['POST'])
 def tracking():
     global stream_only
     global is_test
+    global flip_code
+
+    mearmpi_response = ""
     command = request.json['command']
+
     if command == "streamonly":
         stream_only = True
         is_test = False
-        mearmpi_response = "True"
+        mearmpi_response = "true"
     elif command == "tracking":
         stream_only = False
         is_test = False
-        mearmpi_response = "True"
+        mearmpi_response = "true"
     elif command == "test":
         stream_only = False
         is_test = True
-        mearmpi_response = "True"
+        mearmpi_response = "true"
+
+    if command == "flip-x":
+        flip_code = "0"
+    elif command == "flip-y":
+        flip_code = "1"
+    elif command == "flip-xy":
+        flip_code = "-1"
+    elif command == "flip-reset":
+        flip_code = "reset"
+
     result = {
         "command": command,
         "result": mearmpi_response,
+        "flip_code": flip_code
     }
-    logger.info("sent:{} res:{}".format(command, mearmpi_response))
+    logger.info(
+        "sent:{} res:{} flip: {}".format(command, mearmpi_response, flip_code))
     return jsonify(ResultSet=json.dumps(result))
+
 
 if __name__ == '__main__':
 
@@ -102,4 +126,4 @@ if __name__ == '__main__':
     stream_only = args.stream_only
     is_test = args.test
 
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', threaded=True)

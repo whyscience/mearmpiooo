@@ -1,8 +1,8 @@
-# Object tracking with MearmPi
+# Object tracking with MeArmPi
 
 ## What's this
 
-This is test code of object tracking with Mearm Pi.
+This is test code of object tracking with MeArmPi.
 
 You can do followings:
 * Video streaming from Tello on your browser.
