@@ -124,7 +124,7 @@ At first, your can run app.py with test option to confirm if settings are fine.
 This example is Color(yellow) tracking.
 
 ```sh
-$ python3 app.py -c yellow --test
+python3 app.py -c yellow --test
 ```
 
 access to the streaming url with your browser
@@ -148,7 +148,5 @@ upper = 40, 255, 255
 
 ### Test with only servos
 
-I strongly recommend you to confirm if servo settings are correct with your MeArm Pi.
-
-Run app.py with the arms of MeArmPi removed from servos.
-You can see that servos move to the right direction.
+It is strongly suggested that you confirm if servo settings are correct with your MeArm Pi.
+Run app.py with the arms of MeArmPi removed from servos then you can see that servos move to the right direction.
