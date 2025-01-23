@@ -1,7 +1,7 @@
-from logging import getLogger, basicConfig, DEBUG, INFO
-from time import time, sleep
-import threading
 import configparser
+import threading
+from logging import getLogger, basicConfig, INFO
+from time import time, sleep
 
 logger = getLogger(__name__)
 basicConfig(
@@ -9,6 +9,7 @@ basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(funcName)s(): %(message)s")
 
 import mearm
+
 """ load config """
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -144,7 +145,7 @@ class MearmMove(object):
             logger.debug("lower_angle, upper_angle, base_angle:{} {} {}".
                          format(lower_angle, upper_angle, base_angle))
             self._move_angles(lower_angle, upper_angle, base_angle)
-        if x > xmin and x < xmax - w and y > ymin and y < ymax - h:
+        if xmin < x < xmax - w and ymin < y < ymax - h:
             lower_angle = self._forward_back_mearm(track_area_ratio)
             if lower_angle:
                 logger.debug("inside margin window track_area_ratio:{}".format(

@@ -2,9 +2,12 @@
 https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
 """
 
-import cv2
 import configparser
+
+import cv2
+
 import tracking
+
 """ load configuration """
 config = configparser.ConfigParser()
 config.read('config.ini')

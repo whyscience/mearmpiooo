@@ -2,13 +2,16 @@
 https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
 """
 
-import cv2
-import meanshift
-import camshift
-import mearmlib
 import configparser
 import math
 from timeit import default_timer as timer
+
+import cv2
+
+import camshift
+import meanshift
+import mearmlib
+
 """ load configuration """
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -24,9 +27,9 @@ class Tracking(object):
         self.track_window = self.init_track_window
         self.track_window0 = self.track_window
         self.margin_window = self._set_margin_window()
-        """ Create MeArmMove instnace """
+        """ Create MeArmMove instance """
         self.myMeArmMove = mearmlib.MearmMove(is_test)
-        """ Create opencv tracking instnace """
+        """ Create opencv tracking instance """
         if algorithm == "meanshift":
             self.tracking = meanshift.MeanShift(frame_prop, self.margin_window,
                                                 self.track_window,
@@ -109,7 +112,7 @@ class Tracking(object):
                                   (128, 255, 255), 1)
             self.track_data = "track win:{} area:({}/{} {})".format(
                 track_window, track_area[0] * track_area[1],
-                track_window[2] * track_window[3], track_area_ratio)
+                              track_window[2] * track_window[3], track_area_ratio)
             frame = cv2.putText(
                 frame,
                 self.params, (10, 10),

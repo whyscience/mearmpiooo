@@ -4,8 +4,9 @@ https://groups.google.com/group/mearm/attach/18a4eb363ddaa/MeArmPiTechnicalOverv
 """
 
 import math
-import pigpio
 from logging import getLogger, basicConfig, DEBUG
+
+import pigpio
 
 logger = getLogger(__name__)
 basicConfig(
@@ -18,6 +19,7 @@ safe_angle = 25
 
 class Servo:
     def __init__(self, config):
+        self.currentAngle = None
         self.pin = config['pin']
         self.min = config['min']
         self.max = config['max']
@@ -47,7 +49,7 @@ class Servo:
     def updateServo(self):
         pulseWidth = math.floor(self.min + ((float(
             self.currentAngle - self.minAngle) / float(
-                self.maxAngle - self.minAngle)) * (self.max - self.min)))
+            self.maxAngle - self.minAngle)) * (self.max - self.min)))
         logger.debug("updateServo currentAngle:{} pin:{} pulseWidth:{}".format(
             self.currentAngle, self.pin, pulseWidth))
         pi.set_servo_pulsewidth(self.pin, pulseWidth)

@@ -5,6 +5,7 @@
 This is test code of object tracking with MeArmPi.
 
 You can do followings:
+
 * Video streaming from Tello on your browser.
 * Object / Color Tracking.
 * Change tracking mode (streamonly, test, tracking).
@@ -16,20 +17,16 @@ browser image
 <a href="https://raw.githubusercontent.com/wiki/kodamap/mearmpiooo/images/mearmpi_ui.jpg">
 <img src="https://raw.githubusercontent.com/wiki/kodamap/mearmpiooo/images/mearmpi_ui.jpg" alt="mearmpi_ui" style="width:75%;height:auto;" ></a>
 
-
 ## Reference
-
 
 MeaArmPi TechnicalOverview
 
 This document is very helpful. Plese read this first and test demo code with your MeArmPi.
 https://groups.google.com/group/mearm/attach/18a4eb363ddaa/MeArmPiTechnicalOverviewV0-2DRAFT.pdf?part=0.1
 
-
 Mearm(Python library)
 
 https://gist.github.com/bjpirt/9666d8c623cb98e755c92f1fbeeb6118
-
 
 Flask Video streaming
 
@@ -39,8 +36,6 @@ https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
 OpenCV (camshift sample code)
 
 https://github.com/opencv/opencv/tree/master/samples/python
-
-
 
 ## Prerequisites
 
@@ -61,7 +56,7 @@ sudo apt install libatlas3-base libwebp6 libtiff5 libjasper1 libilmbase12 libope
 sudo apt install libgstreamer1.0-0 libavcodec57 libavformat57 libswscale4 libqtgui4 libqt4-test -y
 ```
 
-* Required packages with this app. 
+* Required packages with this app.
 
 ```sh
 pip3 install opencv-python
@@ -133,7 +128,7 @@ access to the streaming url with your browser
 http://<your mearm ip addr>:5000/
 ```
 
-colors are defined  in color.ini
+colors are defined in color.ini
 
 ```sh
 # define hsv (hue, staturation, lightness)

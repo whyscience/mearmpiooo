@@ -9,12 +9,15 @@
 #
 ###############################################################################
 
-from flask import Flask, Response, render_template, request, jsonify
-from camera import VideoCamera
-from logging import getLogger, basicConfig, DEBUG, INFO
 import argparse
 import configparser
 import json
+from logging import getLogger, basicConfig, INFO
+
+from flask import Flask, Response, render_template, request, jsonify
+
+from camera import VideoCamera
+
 """ load configuration """
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -90,7 +93,6 @@ def tracking():
 
 
 if __name__ == '__main__':
-
     config = configparser.ConfigParser()
     config.read('color.ini')
     colors = config.sections()
