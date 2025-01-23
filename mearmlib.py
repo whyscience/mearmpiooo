@@ -1,3 +1,5 @@
+# !/usr/bin/env python
+# coding: utf-8
 import configparser
 import threading
 from logging import getLogger, basicConfig, INFO
@@ -27,27 +29,28 @@ class MearmMove(object):
         self.time_now = time()
         self.time_old = time()
         self.time_delta = 0
-        self.myMeArm = mearm.MeArm()
+        self.my_mearm = mearm.MeArm()
         """ update current angles at the first time """
-        self.myMeArm.moveToCentres()
+        self.my_mearm.move_to_centres()
         self.grip_t = threading.Thread(target=self._grip_mearm)
         self.grip_t.start()
 
     def _calc_angle(self, mearm, move_ratio, track_area_ratio):
+        angle = 0
         if mearm == "base":
-            angle = round(self.myMeArm.base.maxAngle * move_ratio[0])
+            angle = round(self.my_mearm.base.maxAngle * move_ratio[0])
             if abs(angle) > base_by[1]:
                 angle = base_by[1]
             if abs(angle) < base_by[0]:
                 angle = base_by[0]
         elif mearm == "upper":
-            angle = round(self.myMeArm.upper.maxAngle * move_ratio[1])
+            angle = round(self.my_mearm.upper.maxAngle * move_ratio[1])
             if abs(angle) > upper_by[1]:
                 angle = upper_by[1]
             if abs(angle) < upper_by[0]:
                 angle = upper_by[0]
         elif mearm == "lower":
-            angle = round(self.myMeArm.lower.maxAngle * move_ratio[1])
+            angle = round(self.my_mearm.lower.maxAngle * move_ratio[1])
             if abs(angle) > lower_by[1]:
                 angle = lower_by[1]
             if abs(angle) < lower_by[0]:
@@ -72,12 +75,12 @@ class MearmMove(object):
             logger.info(
                 "!! grip close !! time_delta:{}".format(self.time_delta))
             if not self.is_test:
-                self.myMeArm.moveToGrip(60)
+                self.my_mearm.move_to_grip(60)
             sleep(0.2)
             logger.info(
                 "!! grip open !! time_delta:{}".format(self.time_delta))
             if not self.is_test:
-                self.myMeArm.moveToGrip(30)
+                self.my_mearm.move_to_grip(30)
             sleep(0.2)
             self.time_delta = 0
         self.time_old = self.time_now
@@ -86,7 +89,7 @@ class MearmMove(object):
         logger.info("myMeArm.moveByPosition: lower {} upper {} base {}".format(
             args[0], args[1], args[2]))
         if not self.is_test:
-            self.myMeArm.moveByPosition(args[0], args[1], args[2])
+            self.my_mearm.move_by_position(args[0], args[1], args[2])
 
     def motion(self, track_window, track_area_ratio, move_ratio, margin_window,
                is_test):

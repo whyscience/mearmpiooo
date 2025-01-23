@@ -8,7 +8,8 @@
 # https://github.com/miguelgrinberg/flask-video-streaming/blob/master/LICENSE
 #
 ###############################################################################
-
+# !/usr/bin/env python
+# coding: utf-8
 import argparse
 import configparser
 import json

@@ -2,6 +2,8 @@
 https://gist.github.com/bjpirt/9666d8c623cb98e755c92f1fbeeb6118
 https://groups.google.com/group/mearm/attach/18a4eb363ddaa/MeArmPiTechnicalOverviewV0-2DRAFT.pdf?part=0.1
 """
+# !/usr/bin/env python
+# coding: utf-8
 
 import math
 from logging import getLogger, basicConfig, DEBUG
@@ -26,27 +28,27 @@ class Servo:
         self.minAngle = config['minAngle']
         self.maxAngle = config['maxAngle']
 
-    def moveTo(self, angle):
-        self.moveToAngle(angle)
+    def move_to(self, angle):
+        self.move_to_angle(angle)
 
-    def moveBy(self, angle):
-        newAngle = self.currentAngle + angle
-        self.moveToAngle(newAngle)
+    def move_by(self, angle):
+        new_angle = self.currentAngle + angle
+        self.move_to_angle(new_angle)
 
-    def moveToCentre(self):
+    def move_to_centre(self):
         centre = self.minAngle + (self.maxAngle - self.minAngle) / 2
-        self.moveToAngle(centre)
+        self.move_to_angle(centre)
 
-    def moveToAngle(self, angle):
+    def move_to_angle(self, angle):
         """ prevent MeArmPi from moving so far (angle: +- safe_angle) """
         if angle > self.maxAngle - safe_angle:
             angle = self.maxAngle - safe_angle
         if angle < self.minAngle + safe_angle:
             angle = self.minAngle + safe_angle
         self.currentAngle = angle
-        self.updateServo()
+        self.update_servo()
 
-    def updateServo(self):
+    def update_servo(self):
         pulseWidth = math.floor(self.min + ((float(
             self.currentAngle - self.minAngle) / float(
             self.maxAngle - self.minAngle)) * (self.max - self.min)))
@@ -58,6 +60,7 @@ class Servo:
 class MeArm:
     def __init__(self):
         # ref. https://github.com/mimeindustries/mearm-js/blob/master/lib/MeArmPi.js
+        # 从前面看 右边的舵机
         self.lower = Servo({
             'pin': 17,
             'min': 1300,
@@ -65,6 +68,7 @@ class MeArm:
             'minAngle': 0,
             'maxAngle': 135
         })
+        # 从后面看 左边的舵机
         self.upper = Servo({
             'pin': 22,
             'min': 530,
@@ -87,14 +91,14 @@ class MeArm:
             'maxAngle': 90
         })
 
-    def moveToBase(self, angle):
-        self.base.moveTo(angle)
+    def move_to_base(self, angle):
+        self.base.move_to(angle)
 
-    def moveToPosition(self, lower, upper, base, grip):
-        self.lower.moveTo(lower)
-        self.upper.moveTo(upper)
-        self.base.moveTo(base)
-        self.grip.moveTo(grip)
+    def move_to_position(self, lower, upper, base, grip):
+        self.lower.move_to(lower)
+        self.upper.move_to(upper)
+        self.base.move_to(base)
+        self.grip.move_to(grip)
 
     """
     def moveByPosition(self, lower, upper, base, grip):
@@ -104,25 +108,25 @@ class MeArm:
         self.grip.moveBy(grip)
     """
 
-    def moveByPosition(self, lower, upper, base):
-        self.lower.moveBy(lower)
-        self.upper.moveBy(upper)
-        self.base.moveBy(base)
+    def move_by_position(self, lower, upper, base):
+        self.lower.move_by(lower)
+        self.upper.move_by(upper)
+        self.base.move_by(base)
 
-    def moveByBase(self, angle):
-        self.base.moveBy(angle)
+    def move_by_base(self, angle):
+        self.base.move_by(angle)
 
-    def moveByUpper(self, angle):
-        self.upper.moveBy(angle)
+    def move_by_upper(self, angle):
+        self.upper.move_by(angle)
 
-    def moveByLower(self, angle):
-        self.lower.moveBy(angle)
+    def move_by_lower(self, angle):
+        self.lower.move_by(angle)
 
-    def moveToGrip(self, angle):
-        self.grip.moveTo(angle)
+    def move_to_grip(self, angle):
+        self.grip.move_to(angle)
 
-    def moveToCentres(self):
-        self.base.moveToCentre()
-        self.lower.moveToCentre()
-        self.upper.moveToCentre()
-        self.grip.moveToCentre()
+    def move_to_centres(self):
+        self.base.move_to_centre()
+        self.lower.move_to_centre()
+        self.upper.move_to_centre()
+        self.grip.move_to_centre()

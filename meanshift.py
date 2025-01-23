@@ -15,7 +15,8 @@
 # https://github.com/opencv/opencv/blob/master/LICENSE
 # 
 ###############################################################################
-
+# !/usr/bin/env python
+# coding: utf-8
 import configparser
 
 import cv2

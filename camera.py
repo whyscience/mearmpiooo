@@ -1,7 +1,8 @@
 """ ref:
 https://github.com/ECI-Robotics/opencv_remote_streaming_processing/
 """
-
+# !/usr/bin/env python
+# coding: utf-8
 import configparser
 
 import cv2
