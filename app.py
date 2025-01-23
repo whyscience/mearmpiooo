@@ -1,9 +1,9 @@
 ###############################################################################
-# 
+#
 # The MIT License (MIT)
-# 
+#
 # Copyright (c) 2014 Miguel Grinberg
-# 
+#
 # Released under the MIT license
 # https://github.com/miguelgrinberg/flask-video-streaming/blob/master/LICENSE
 #
@@ -22,7 +22,7 @@ from camera import VideoCamera
 """ 加载配置 """
 config = configparser.ConfigParser()
 config.read('config.ini')
-flip_code = eval(config.get('camera', 'flipcode'))
+flip_code = eval(config.get('camera', 'flipcode'))  # 图像翻转代码
 
 app = Flask(__name__)
 
@@ -33,7 +33,14 @@ basicConfig(
 
 
 def gen(camera):
-    """ 生成视频流帧 """
+    """生成视频流帧
+
+    Args:
+        camera: VideoCamera实例
+
+    Yields:
+        JPEG格式的视频帧数据
+    """
     while True:
         frame = camera.get_frame(stream_only, is_test, flip_code)
         yield (b'--frame\r\n'
@@ -42,13 +49,21 @@ def gen(camera):
 
 @app.route('/')
 def index():
-    """ 渲染主页 """
+    """渲染主页
+
+    Returns:
+        渲染后的HTML页面
+    """
     return render_template('index.html', flip_code=flip_code)
 
 
 @app.route('/video_feed')
 def video_feed():
-    """ 视频流路由 """
+    """视频流路由
+
+    Returns:
+        包含MJPEG视频流的Response对象
+    """
     video_camera = VideoCamera(algorithm, target_color, stream_only, is_test)
     return Response(
         gen(video_camera),
@@ -57,7 +72,20 @@ def video_feed():
 
 @app.route('/tracking', methods=['POST'])
 def tracking():
-    """ 处理跟踪命令 """
+    """处理跟踪命令
+
+    处理前端发送的跟踪控制命令，包括:
+    - streamonly: 仅视频流模式
+    - tracking: 跟踪模式
+    - test: 测试模式
+    - flip-x: X轴翻转
+    - flip-y: Y轴翻转
+    - flip-xy: XY轴翻转
+    - flip-reset: 重置翻转
+
+    Returns:
+        包含命令执行结果的JSON响应
+    """
     global stream_only
     global is_test
     global flip_code
@@ -79,13 +107,13 @@ def tracking():
         mearm_pi_response = "true"
 
     if command == "flip-x":
-        flip_code = "0"
+        flip_code = "0"  # X轴翻转
     elif command == "flip-y":
-        flip_code = "1"
+        flip_code = "1"  # Y轴翻转
     elif command == "flip-xy":
-        flip_code = "-1"
+        flip_code = "-1"  # XY轴翻转
     elif command == "flip-reset":
-        flip_code = "reset"
+        flip_code = "reset"  # 重置翻转
 
     result = {
         "command": command,
@@ -98,10 +126,12 @@ def tracking():
 
 
 if __name__ == '__main__':
+    # 读取颜色配置文件
     config = configparser.ConfigParser()
     config.read('color.ini')
     colors = config.sections()
 
+    # 命令行参数解析
     parser = argparse.ArgumentParser(
         description='opencv object tracking with MearmPi')
     parser.add_argument(
@@ -128,9 +158,11 @@ if __name__ == '__main__':
         choices=colors)
     args = parser.parse_args()
 
-    algorithm = args.algorithm
-    target_color = args.color
-    stream_only = args.stream_only
-    is_test = args.test
+    # 初始化全局变量
+    algorithm = args.algorithm  # 跟踪算法
+    target_color = args.color  # 目标颜色
+    stream_only = args.stream_only  # 是否仅视频流模式
+    is_test = args.test  # 是否测试模式
 
+    # 启动Flask应用
     app.run(host='0.0.0.0', threaded=True)
