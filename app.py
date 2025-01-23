@@ -19,7 +19,7 @@ from flask import Flask, Response, render_template, request, jsonify
 
 from camera import VideoCamera
 
-""" load configuration """
+""" 加载配置 """
 config = configparser.ConfigParser()
 config.read('config.ini')
 flip_code = eval(config.get('camera', 'flipcode'))
@@ -33,6 +33,7 @@ basicConfig(
 
 
 def gen(camera):
+    """ 生成视频流帧 """
     while True:
         frame = camera.get_frame(stream_only, is_test, flip_code)
         yield (b'--frame\r\n'
@@ -41,11 +42,13 @@ def gen(camera):
 
 @app.route('/')
 def index():
+    """ 渲染主页 """
     return render_template('index.html', flip_code=flip_code)
 
 
 @app.route('/video_feed')
 def video_feed():
+    """ 视频流路由 """
     video_camera = VideoCamera(algorithm, target_color, stream_only, is_test)
     return Response(
         gen(video_camera),
@@ -54,25 +57,26 @@ def video_feed():
 
 @app.route('/tracking', methods=['POST'])
 def tracking():
+    """ 处理跟踪命令 """
     global stream_only
     global is_test
     global flip_code
 
-    mearmpi_response = ""
+    mearm_pi_response = ""
     command = request.json['command']
 
     if command == "streamonly":
         stream_only = True
         is_test = False
-        mearmpi_response = "true"
+        mearm_pi_response = "true"
     elif command == "tracking":
         stream_only = False
         is_test = False
-        mearmpi_response = "true"
+        mearm_pi_response = "true"
     elif command == "test":
         stream_only = False
         is_test = True
-        mearmpi_response = "true"
+        mearm_pi_response = "true"
 
     if command == "flip-x":
         flip_code = "0"
@@ -85,11 +89,11 @@ def tracking():
 
     result = {
         "command": command,
-        "result": mearmpi_response,
+        "result": mearm_pi_response,
         "flip_code": flip_code
     }
     logger.info(
-        "sent:{} res:{} flip: {}".format(command, mearmpi_response, flip_code))
+        "sent:{} res:{} flip: {}".format(command, mearm_pi_response, flip_code))
     return jsonify(ResultSet=json.dumps(result))
 
 
